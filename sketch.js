@@ -131,19 +131,12 @@ function verificarColisiones() {
     if (pelotaX < 0) {
         computadoraScore++;
         sonidoGol.play(); // Reproducir sonido de gol
-        narrarMarcador(); // Narrar marcador
         resetPelota();
     } else if (pelotaX > width) {
         jugadorScore++;
         sonidoGol.play(); // Reproducir sonido de gol
-        narrarMarcador(); // Narrar marcador
         resetPelota();
     }
-}
-
-function narrarMarcador() {
-    let narrador = new SpeechSynthesisUtterance(`El marcador es ${jugadorScore} a ${computadoraScore}`);
-    window.speechSynthesis.speak(narrador);
 }
 
 function resetPelota() {

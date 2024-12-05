@@ -24,12 +24,16 @@ let fondo;
 let barraJugador;
 let barraComputadora;
 let bola;
+let sonidoRebote;
+let sonidoGol;
 
 function preload() {
-    fondo = loadImage('./sprites/fondo1.png');
-    barraJugador = loadImage('./sprites/barra1.png');
-    barraComputadora = loadImage('./sprites/barra2.png');
-    bola = loadImage('./sprites/bola.png');
+    fondo = loadImage('fondo1.png');
+    barraJugador = loadImage('barra1.png');
+    barraComputadora = loadImage('barra2.png');
+    bola = loadImage('bola.png');
+    sonidoRebote = loadSound('bounce.wav');
+    sonidoGol = loadSound('GameOver.wav');
 }
 
 function setup() {
@@ -51,7 +55,7 @@ function draw() {
 }
 
 function dibujarMarcos() {
-    fill(color("#2B3FD6"));
+    fill(255);
     rect(0, 0, width, grosorMarco); // Marco superior
     rect(0, height - grosorMarco, width, grosorMarco); // Marco inferior
 }
@@ -73,7 +77,7 @@ function dibujarPelota() {
 function mostrarPuntaje() {
     textSize(32);
     textAlign(CENTER, CENTER);
-    fill(color("#2B3FD6"));
+    fill(255);
     text(jugadorScore, width / 4, grosorMarco * 3);
     text(computadoraScore, 3 * width / 4, grosorMarco * 3);
 }
@@ -110,6 +114,7 @@ function verificarColisiones() {
         let factorAngulo = (puntoImpacto / (altoRaqueta / 2)) * PI / 3; // Ángulo máximo de 60 grados
         velocidadPelotaY = 10 * sin(factorAngulo);
         velocidadPelotaX *= -1;
+        sonidoRebote.play(); // Reproducir sonido de rebote
     }
 
     // Colisión con la raqueta de la computadora
@@ -119,16 +124,26 @@ function verificarColisiones() {
         let factorAngulo = (puntoImpacto / (altoRaqueta / 2)) * PI / 3; // Ángulo máximo de 60 grados
         velocidadPelotaY = 10 * sin(factorAngulo);
         velocidadPelotaX *= -1;
+        sonidoRebote.play(); // Reproducir sonido de rebote
     }
 
     // Colisión con los bordes izquierdo y derecho (anotación y reinicio)
     if (pelotaX < 0) {
         computadoraScore++;
+        sonidoGol.play(); // Reproducir sonido de gol
+        narrarMarcador(); // Narrar marcador
         resetPelota();
     } else if (pelotaX > width) {
         jugadorScore++;
+        sonidoGol.play(); // Reproducir sonido de gol
+        narrarMarcador(); // Narrar marcador
         resetPelota();
     }
+}
+
+function narrarMarcador() {
+    let narrador = new SpeechSynthesisUtterance(`El marcador es ${jugadorScore} a ${computadoraScore}`);
+    window.speechSynthesis.speak(narrador);
 }
 
 function resetPelota() {

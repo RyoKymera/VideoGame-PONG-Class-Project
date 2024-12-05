@@ -16,12 +16,14 @@ let velocidadPelotaY = 5;
 
 let grosorMarco = 10;
 
+let jugadorScore = 0;
+let computadoraScore = 0;
+
 function setup() {
     createCanvas(anchoCanvas, altoCanvas);
     jugadorY = height / 2 - altoRaqueta / 2;
     computadoraY = height / 2 - altoRaqueta / 2;
-    pelotaX = width / 2;
-    pelotaY = height / 2;
+    resetPelota();
 }
 
 function draw() {
@@ -29,6 +31,7 @@ function draw() {
     dibujarMarcos();
     dibujarRaquetas();
     dibujarPelota();
+    mostrarPuntaje();
     moverPelota();
     moverComputadora();
     verificarColisiones();
@@ -49,6 +52,14 @@ function dibujarRaquetas() {
 function dibujarPelota() {
     fill(255);
     ellipse(pelotaX, pelotaY, diametroPelota, diametroPelota);
+}
+
+function mostrarPuntaje() {
+    textSize(32);
+    textAlign(CENTER, CENTER);
+    fill(255);
+    text(jugadorScore, width / 4, grosorMarco * 3);
+    text(computadoraScore, 3 * width / 4, grosorMarco * 3);
 }
 
 function moverPelota() {
@@ -75,21 +86,39 @@ function verificarColisiones() {
     // Colisión con la raqueta del jugador
     if (pelotaX - diametroPelota / 2 < jugadorX + anchoRaqueta && 
         pelotaY > jugadorY && pelotaY < jugadorY + altoRaqueta) {
+        let puntoImpacto = pelotaY - (jugadorY + altoRaqueta / 2);
+        let factorAngulo = (puntoImpacto / (altoRaqueta / 2)) * PI / 3; // Ángulo máximo de 45 grados
+        //velocidadPelotaX = 5 * cos(factorAngulo);
+        velocidadPelotaY = 10 * sin(factorAngulo);
         velocidadPelotaX *= -1;
+
     }
 
     // Colisión con la raqueta de la computadora
     if (pelotaX + diametroPelota / 2 > computadoraX && 
         pelotaY > computadoraY && pelotaY < computadoraY + altoRaqueta) {
+        let puntoImpacto = pelotaY - (computadoraY + altoRaqueta / 2);
+        let factorAngulo = (puntoImpacto / (altoRaqueta / 2)) * PI / 3; // Ángulo máximo de 45 grados
+        //velocidadPelotaX = 5 * cos(factorAngulo);
+        velocidadPelotaY = 10 * sin(factorAngulo);
         velocidadPelotaX *= -1;
     }
 
-    // Colisión con los bordes izquierdo y derecho (reinicio)
-    if (pelotaX < 0 || pelotaX > width) {
-        pelotaX = width / 2;
-        pelotaY = height / 2;
-        velocidadPelotaX *= -1;
+    // Colisión con los bordes izquierdo y derecho (anotación y reinicio)
+    if (pelotaX < 0) {
+        computadoraScore++;
+        resetPelota();
+    } else if (pelotaX > width) {
+        jugadorScore++;
+        resetPelota();
     }
+}
+
+function resetPelota() {
+    pelotaX = width / 2;
+    pelotaY = height / 2;
+    velocidadPelotaX = 5 * (Math.random() > 0.5 ? 1 : -1);
+    velocidadPelotaY = 5 * (Math.random() > 0.5 ? 1 : -1);
 }
 
 function keyPressed() {

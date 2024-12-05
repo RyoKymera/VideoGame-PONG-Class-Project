@@ -87,7 +87,7 @@ function verificarColisiones() {
     if (pelotaX - diametroPelota / 2 < jugadorX + anchoRaqueta && 
         pelotaY > jugadorY && pelotaY < jugadorY + altoRaqueta) {
         let puntoImpacto = pelotaY - (jugadorY + altoRaqueta / 2);
-        let factorAngulo = (puntoImpacto / (altoRaqueta / 2)) * PI / 3; // Ángulo máximo de 45 grados
+        let factorAngulo = (puntoImpacto / (altoRaqueta / 2)) * PI / 3; // Ángulo máximo de 60 grados
         //velocidadPelotaX = 5 * cos(factorAngulo);
         velocidadPelotaY = 10 * sin(factorAngulo);
         velocidadPelotaX *= -1;
@@ -98,7 +98,7 @@ function verificarColisiones() {
     if (pelotaX + diametroPelota / 2 > computadoraX && 
         pelotaY > computadoraY && pelotaY < computadoraY + altoRaqueta) {
         let puntoImpacto = pelotaY - (computadoraY + altoRaqueta / 2);
-        let factorAngulo = (puntoImpacto / (altoRaqueta / 2)) * PI / 3; // Ángulo máximo de 45 grados
+        let factorAngulo = (puntoImpacto / (altoRaqueta / 2)) * PI / 3; // Ángulo máximo de 60 grados
         //velocidadPelotaX = 5 * cos(factorAngulo);
         velocidadPelotaY = 10 * sin(factorAngulo);
         velocidadPelotaX *= -1;
